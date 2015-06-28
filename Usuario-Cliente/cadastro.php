@@ -38,7 +38,7 @@
           </div>
         <div class="col-md-6">
           <h4 class="text-center">Cadastro de usuário</h4>
-          <div  id="botaoacao" role="form">
+          <form role="form">
           
             <div class="form-group">
               <label for="exampleInputEmail1">Nome de usuário:</label>
@@ -52,8 +52,9 @@
               <label for="exampleInputPassword1">Repita a senha:</label>
               <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Repetir Senha">
             </div>
-            <button id="botaoacao" class="btn btn-warning btn-lg">Cadastrar</button>
-          </div>
+            <button type="submit" class="btn btn-warning btn-lg">Cadastrar</button>
+          
+		  </form>
         </div><!-- /.col-md-12 -->
       </div><!-- /.row -->
       
@@ -63,7 +64,7 @@
     <script src="js/vendor/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/flat-ui.min.js"></script>
-    <script src="Js/botaocadastrar.js"> </script>
+    <script src="js/cadastro.js"> </script>
     <script src="js/application.js"></script>
 
   </body>
