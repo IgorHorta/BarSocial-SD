@@ -42,15 +42,15 @@
           
             <div class="form-group">
               <label for="exampleInputEmail1">Nome de usuário:</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Informe um nome de usuário">
+              <input type="text" class="form-control" id="exampleInputText1" name="user.name" placeholder="Informe um nome de usuário">
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">Senha:</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Senha">
+              <input type="password" class="form-control" id="exampleInputPassword1" name="user.password" placeholder="Senha">
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">Repita a senha:</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Repetir Senha">
+              <input type="password" class="form-control" id="exampleInputPassword1" name="user.password" placeholder="Repetir Senha">
             </div>
             <button type="submit" class="btn btn-warning btn-lg">Cadastrar</button>
           
