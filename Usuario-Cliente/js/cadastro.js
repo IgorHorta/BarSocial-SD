@@ -1,3 +1,10 @@
+var  loggedUser= {
+	name : '',
+	password: ''
+};
+
+
+
 $(document).ready(function(){
 	$( "form" ).submit(function( event ) {
 		var array = $( this ).serializeArray();
@@ -11,9 +18,15 @@ $(document).ready(function(){
             type: "POST",
             url: "http://localhost:8080/BarSocial/user/signUp",
             data: json,
+			crossDomain : true,
             dataType: "json"
-        }).done(function() { 
-             console.log("Usuario Cadastrado com sucesso");
+        }).done(function(response) { 
+             if(response.status == false){
+				alert(response.message); 
+				console.log(loggedUser.name)
+			 }else{
+				 loggedUser = response.data;
+			 }
         }).fail(function() { 
             alert("Erro no Servidor"); 
         });
