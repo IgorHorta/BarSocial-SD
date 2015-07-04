@@ -3,6 +3,13 @@ var  loggedUser= {
 	password: '',
 	accessLvl:'',
 	id:'',
+	order:{
+		id: '',
+		name : '',
+		description : '',
+		num : '',
+		status : ''
+	}
 };
 
 var ipAtual = "192.168.0.112"
@@ -51,8 +58,6 @@ $(document).ready(function(){
 				 loggedUser = response.data;
 				 $("#cadastro").css("display", "none");
 				 $( "#cadastro_pedido" ).css ("display","");
-
-
 			 }
         }).fail(function() { 
             alert("Erro no Servidor"); 
@@ -62,12 +67,14 @@ $(document).ready(function(){
 
 	$( "#formCadastraPedido" ).submit(function( event ) {
 		var array = $( this ).serializeArray();
-		array.push({"user.id":loggedUser.id})
+		array.push({
+			"name":"order.user.id",
+			"value":loggedUser.id
+		});
 		var json = {};
 		jQuery.each(array, function() {
 			json[this.name] = this.value || '';
 		});
-		json.
 		event.preventDefault();
 		
 		$.ajax({
@@ -82,6 +89,7 @@ $(document).ready(function(){
 			 }else{
 				$("#cadastro_pedido").css("display", "none");
 				$( "#status" ).css ("display","");
+				loggedUser.order = response.data;
 				var task = setInterval(checkOrder, 10000);
 			 }
         }).fail(function() { 
