@@ -16,7 +16,7 @@ $(document).ready(function(){
 		
 		$.ajax({
             type: "POST",
-            url: "http://localhost:8080/BarSocial/user/signUp",
+            url: "http://192.168.0.112:8080/BarSocial/user/signUp",
             data: json,
 			crossDomain : true,
             dataType: "json"
@@ -34,7 +34,7 @@ $(document).ready(function(){
 			 }
         }).fail(function() { 
             alert("Erro no Servidor"); 
-                        
+
         });
     });
 
