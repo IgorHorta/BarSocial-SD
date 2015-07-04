@@ -3,10 +3,12 @@ var  loggedUser= {
 	password: ''
 };
 
+var ipAtual = "192.168.0.112"
+
 function checkOrder(){
 	$.ajax({
             type: "POST",
-            url: "http://localhost:8080/BarSocial/user/checkOrderStatus",
+            url: "http://"+ipAtual+":8080/BarSocial/user/checkOrderStatus",
             data:{
 				'user.name': loggedUser.name
 			},
@@ -35,7 +37,7 @@ $(document).ready(function(){
 		
 		$.ajax({
             type: "POST",
-            url: "http://localhost:8080/BarSocial/user/signUp",
+            url:"http://"+ipAtual+":8080/BarSocial/user/signUp",
             data: json,
 			//crossDomain : true,
             dataType: "json"
@@ -66,7 +68,7 @@ $(document).ready(function(){
 		
 		$.ajax({
             type: "POST",
-            url: "http://localhost:8080/BarSocial/user/makeOrder",
+            url: "http://"+ipAtual+":8080/BarSocial/user/makeOrder",
             data: json,
 			crossDomain : true,
             dataType: "json"
