@@ -3,10 +3,29 @@ var  loggedUser= {
 	password: ''
 };
 
+function checkOrder(){
+	$.ajax({
+            type: "POST",
+            url: "http://localhost:8080/BarSocial/user/checkOrderStatus",
+            data:{
+				'user.name': loggedUser.name
+			},
+			crossDomain : true,
+            dataType: "json"
+        }).done(function(response) { 
+             if(response.status == false){
+			//	alert(response.message); 
+			 }else{
+				console.log(response);
+			 }
+        }).fail(function() { 
+            alert("Erro no Servidor"); 
+        });
+}
 
 
 $(document).ready(function(){
-	$( "#cadastro" ).submit(function( event ) {
+	$( "#cadastrousuario" ).submit(function( event ) {
 		var array = $( this ).serializeArray();
 		var json = {};
 		jQuery.each(array, function() {
@@ -18,7 +37,7 @@ $(document).ready(function(){
             type: "POST",
             url: "http://localhost:8080/BarSocial/user/signUp",
             data: json,
-			crossDomain : true,
+			//crossDomain : true,
             dataType: "json"
         }).done(function(response) { 
              if(response.status == false){
@@ -27,7 +46,6 @@ $(document).ready(function(){
 			 }else{
 				 loggedUser = response.data;
 				 $("#cadastro").css("display", "none");
-
 				 $( "#cadastro_pedido" ).css ("display","");
 
 
@@ -38,10 +56,7 @@ $(document).ready(function(){
         });
     });
 
-
-
-
-	$( "#cadastro_pedido" ).submit(function( event ) {
+	$( "#formCadastraPedido" ).submit(function( event ) {
 		var array = $( this ).serializeArray();
 		var json = {};
 		jQuery.each(array, function() {
@@ -51,16 +66,17 @@ $(document).ready(function(){
 		
 		$.ajax({
             type: "POST",
-            url: "http://localhost:8080/BarSocial/user/signUp",
+            url: "http://localhost:8080/BarSocial/user/makeOrder",
             data: json,
 			crossDomain : true,
             dataType: "json"
         }).done(function(response) { 
              if(response.status == false){
 				alert(response.message); 
-				console.log(loggedUser.name)
 			 }else{
-				 loggedUser = response.data;
+				$("#cadastro_pedido").css("display", "none");
+				$( "#status" ).css ("display","");
+				var task = setInterval(checkOrder, 10000);
 			 }
         }).fail(function() { 
             alert("Erro no Servidor"); 

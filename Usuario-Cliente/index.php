@@ -69,28 +69,28 @@
                <img src="img/logo.jpg" class="center-block" style="padding-top:20px;">
           </div>
         <div class="col-md-8">
-         <form action="#" class="form">
+         <form id="formCadastraPedido" class="form">
              <h4>Marque o item que deseja pedir:</h4>
             <div class="form-group form-inline">
              
               <label class="radio" for="item1">
-                <input type="radio" name="optionsRadios" data-toggle="radio" value="" id="item1" required checked>
+                <input type="radio" name="order.name" data-toggle="radio" value="Bolo" id="item1" required checked>
                 Bolo<img src="img/bolo.jpg" class="img-responsive">
               </label>
               <label class="radio" for="item2">
-                <input type="radio" name="optionsRadios" data-toggle="radio" value="" id="item2" required>
+                <input type="radio" name="order.name" data-toggle="radio" value="Hamburger" id="item2" required>
                  Hamburger<img src="img/burguer.jpg" class="img-responsive">
               </label>
               <label class="radio" for="item3">
-                <input type="radio" name="optionsRadios" data-toggle="radio" value="" id="item3" required>
+                <input type="radio" name="order.name" data-toggle="radio" value="Cerveja" id="item3" required>
                  Cerveja<img src="img/cerveja.jpg" class="img-responsive">
               </label>
                 <label class="radio" for="item4">
-                <input type="radio" name="optionsRadios" data-toggle="radio" value="" id="item4" required>
+                <input type="radio" name="order.name" data-toggle="radio" value="Sushi" id="item4" required>
                  Sushi<img src="img/sushi.jpg" class="img-responsive">
               </label>
                  <label class="radio" for="item5">
-                <input type="radio" name="optionsRadios" data-toggle="radio" value="" id="item5" required>
+                <input type="radio" name="order.name" data-toggle="radio" value="Hot-dog" id="item5" required>
                  Hot-dog<img src="img/doge.jpg" class="img-responsive">
               </label>
             </div>
@@ -99,17 +99,17 @@
             <div class="form-group form-group-hg">
             <label class="col-sm-4 control-label" for="formGroupInputHuge">Selecione a quantidade:</label>
                 <div class="col-sm-8">
-              <select data-toggle="select" class="form-control select select-primary">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                  <option>7</option>
-                  <option>8</option>
-                  <option>9</option>
-                  <option>10</option>
+              <select data-toggle="select" name="order.num" class="form-control select select-primary">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
               </select>
                 </div>
             </div>
@@ -119,7 +119,7 @@
              <h4>Observações</h4>
           
             <div class="form-group">
-              <textarea class="form-control" rows="3"></textarea>
+              <textarea name="order.description"class="form-control" rows="3"></textarea>
             </div>
               <button type="submit" class="btn btn-primary btn-lg" id="envia_pedido">Enviar Pedido</button>
           </form>
@@ -135,7 +135,7 @@
                <img src="img/logo.jpg" class="center-block" style="padding-top:20px;">
           </div>
         <div class="col-md-8">
-         <form action="#" class="form">
+         <form class="form">
              <h4>Status do seu pedido:</h4>
            <div class="jumbotron">
         <h1>Cozinhando</h1>
