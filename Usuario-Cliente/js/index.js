@@ -1,6 +1,8 @@
 var  loggedUser= {
 	name : '',
-	password: ''
+	password: '',
+	accessLvl:'',
+	id:'',
 };
 
 var ipAtual = "192.168.0.112"
@@ -60,10 +62,12 @@ $(document).ready(function(){
 
 	$( "#formCadastraPedido" ).submit(function( event ) {
 		var array = $( this ).serializeArray();
+		array.push({"user.id":loggedUser.id})
 		var json = {};
 		jQuery.each(array, function() {
 			json[this.name] = this.value || '';
 		});
+		json.
 		event.preventDefault();
 		
 		$.ajax({
