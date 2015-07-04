@@ -117,7 +117,6 @@
                  </div>
            
              <h4>Observações</h4>
-          
             <div class="form-group">
               <textarea name="order.description"class="form-control" rows="3"></textarea>
             </div>
