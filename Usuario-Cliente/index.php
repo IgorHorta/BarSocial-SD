@@ -11,7 +11,7 @@
     <!-- Loading Flat UI -->
     <link href="css/flat-ui.css" rel="stylesheet">
 
-    <link rel="shortcut icon" href="img/favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico">
     
     
 
