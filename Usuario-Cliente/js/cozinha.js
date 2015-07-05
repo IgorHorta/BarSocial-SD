@@ -12,9 +12,8 @@ var  loggedUser= {
 	}
 };
 
-var ipAtual = "192.168.0.112"
-
-function getOrder(){
+var ipAtual = "localhost"
+$("#recebe_pedido").click(function(){
 	$.ajax({
             type: "POST",
             url: "http://"+ipAtual+":8080/BarSocial/user/getOrder",
@@ -30,7 +29,9 @@ function getOrder(){
         }).fail(function() { 
             alert("Erro no Servidor"); 
         });
-}
+	
+});
+	
 
 
 

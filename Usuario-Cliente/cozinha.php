@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Flat UI Free</title>
+    <title>BarSocial</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Loading Bootstrap -->
@@ -84,7 +84,7 @@
                  
              </div>
              <div class="row">
-              <button type="submit" class="btn btn-info btn-lg center-block" id="finaliza_pedido">Finalizar Pedido</button>
+              <button type="submit" class="btn btn-info btn-lg center-block" id="atualizar_pedido">Atualizar Pedido</button>
              </div>
           </form>
         </div>
@@ -96,7 +96,7 @@
     <script src="js/vendor/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/flat-ui.min.js"></script>
-
+	<script src="js/cozinha.js"></script>
     <script src="js/application.js"></script>
 
   </body>
