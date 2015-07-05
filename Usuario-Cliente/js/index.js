@@ -12,27 +12,38 @@ var  loggedUser= {
 	}
 };
 
-var ipAtual = "192.168.0.112"
+var ipAtual = "localhost"
 
 function checkOrder(){
 	$.ajax({
             type: "POST",
             url: "http://"+ipAtual+":8080/BarSocial/user/checkOrderStatus",
             data:{
-				'user.name': loggedUser.name
+				'order.id': loggedUser.order.id,
+				'order.name': loggedUser.order.name,
+				'order.user.id': loggedUser.id
 			},
 			crossDomain : true,
             dataType: "json"
         }).done(function(response) { 
              if(response.status == false){
-			//	alert(response.message); 
+					alert(response.message); 
 			 }else{
-				console.log(response);
+				loggedUser.order = response.data;
+				updateOrderStatusView();
 			 }
         }).fail(function() { 
             alert("Erro no Servidor"); 
         });
 }
+
+function updateOrderStatusView(){
+	$("#user-name").html(loggedUser.name);
+	$("#order-status").html(loggedUser.order.status);
+}
+
+
+
 
 
 $(document).ready(function(){
@@ -90,6 +101,7 @@ $(document).ready(function(){
 				$("#cadastro_pedido").css("display", "none");
 				$( "#status" ).css ("display","");
 				loggedUser.order = response.data;
+				updateOrderStatusView();
 				var task = setInterval(checkOrder, 10000);
 			 }
         }).fail(function() { 

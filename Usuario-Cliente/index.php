@@ -39,7 +39,7 @@
               <img src="img/logo.jpg" class="center-block">
           </div>
         <div class="col-md-6">
-          <h4 class="text-center">Cadastro de usuário</h4>
+          <h4 class="text-center">Cadastro de usuário / Login</h4>
           <form id= "cadastrousuario" role="form">
           
             <div class="form-group">
@@ -49,10 +49,6 @@
             <div class="form-group">
               <label for="exampleInputPassword1">Senha:</label>
               <input type="password" class="form-control" id="exampleInputPassword1" name="user.password" placeholder="Senha">
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Repita a senha:</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" name="user.password" placeholder="Repetir Senha">
             </div>
             <button type="submit" class="btn btn-warning btn-lg">Cadastrar</button>
           
@@ -130,14 +126,14 @@
         
         <div class="row">
           <div class="col-md-4">
-              <h3 class="text-center">Olá Igor!</h3>
+              <h3 id="user-name" class="text-center">Olá Igor!</h3>
                <img src="img/logo.jpg" class="center-block" style="padding-top:20px;">
           </div>
         <div class="col-md-8">
          <form class="form">
              <h4>Status do seu pedido:</h4>
            <div class="jumbotron">
-        <h1>Cozinhando</h1>
+        <h1 id="order-status">Cozinhando</h1>
         <p class="lead">Estamos preparando tudo para ficar perfeito para você</p>
         <p><a class="btn btn-lg btn-success" href="#" role="button" id="sair">Sair</a></p>
       </div>
