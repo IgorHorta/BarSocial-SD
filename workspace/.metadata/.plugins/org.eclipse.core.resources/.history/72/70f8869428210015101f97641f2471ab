@@ -1,0 +1,30 @@
+package interceptor;
+
+import br.com.caelum.vraptor.interceptor.Interceptor;
+
+public class RequestInfoInterceptor implements Interceptor {
+	/** Objetos da servlet request.*/
+	private final BrowserRegistryBS browserBS;
+	private final RequestInfo info;
+	
+	public RequestInfoInterceptor(BrowserRegistryBS browserBS, RequestInfo info) {
+		this.browserBS = browserBS;
+		this.info = info;
+	}
+	
+	@Override
+	public boolean accepts(ResourceMethod method) {
+		return true;
+	}
+
+	@Override
+	public void intercept(InterceptorStack stack, ResourceMethod method,
+			Object obj) throws InterceptionException {
+		if (!method.containsAnnotation(PublicContent.class)) {
+			this.browserBS.processCookies();
+		}
+		this.info.setHeader("P3P", "CP=\"The PrizeIdea doesn't have a P3P policy.\"");
+		this.info.setHeader("Access-Control-Allow-Origin", "*");
+		stack.next(method, obj);
+	}
+}

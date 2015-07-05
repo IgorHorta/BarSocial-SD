@@ -1,0 +1,414 @@
+package dao;
+import java.sql.*;
+
+import order.Order;
+import user.User;
+
+public class BarSocialDao {
+	
+	public static Connection getConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		Connection conn=null;
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		String url = "jdbc:mysql://localhost/barsocial?user=root&password=";
+		conn = DriverManager.getConnection(url);	
+		return conn;
+	}
+	
+	public static User retriveUser(int userId) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		Connection conn = getConnection();
+		User userToReturn = new User();
+		
+		String query = "SELECT * FROM user where iduser = ?";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		buscar.setInt (1, userId);
+		ResultSet lista = buscar.executeQuery();
+		if(lista.next()){
+			userToReturn.setName(lista.getString("name"));
+			userToReturn.setAccessLvl(lista.getInt("accessLvl"));
+			userToReturn.setId(lista.getInt("iduser"));
+		}
+		return userToReturn;
+	}
+	
+	
+	
+	public static User searchUser(User user) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Connection conn = getConnection();
+		
+		String query = "SELECT * FROM user where name = ?";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		buscar.setString (1, user.getName());
+		ResultSet lista = buscar.executeQuery();
+		
+		User userToReturn = new User();
+		if(lista.next()){
+			userToReturn.setName(lista.getString("name"));
+			userToReturn.setAccessLvl(lista.getInt("accessLvl"));
+			userToReturn.setId(lista.getInt("iduser"));
+		}else{
+			String qr = "INSERT INTO user (name, password, accessLvl) VALUES (?,?,?)";
+			PreparedStatement inserir = conn.prepareStatement(qr);
+			inserir.setString(1, user.getName());
+			inserir.setString(2, user.getPassword());
+			inserir.setInt(3, user.getAccessLvl());
+			inserir.execute();
+			userToReturn = user;
+		}
+		conn.close();
+		return userToReturn;
+	}
+	
+	public static Order makeAOrder(Order order) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Connection conn = getConnection();
+		String query = "INSERT INTO `order`(`name`, `description`, `num`, `user_id`) VALUES (?,?,?,?)";
+		PreparedStatement inserir = conn.prepareStatement(query);
+		inserir.setString(1, order.getName());
+		inserir.setString(2, order.getDescription());
+		inserir.setInt(3, order.getNum());
+		inserir.setInt(4, order.getUser().getId());
+		inserir.execute();
+		conn.close();
+		return order;
+	}
+	
+	public static Order checkMyOrder(Order order) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		Connection conn = getConnection();
+		Order orderUpdated = new Order();
+		String query = "SELECT * FROM `order` WHERE user_id = ?";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		buscar.setInt (1, order.getUser().getId());
+		ResultSet lista = buscar.executeQuery();
+		if(lista.last()){
+			orderUpdated.setName(lista.getString("name"));
+			orderUpdated.setDescription(lista.getString("description"));
+			orderUpdated.setNum(lista.getInt("num"));
+			orderUpdated.setStatus(lista.getString("status"));
+			orderUpdated.setId(lista.getInt("id"));
+		}
+		orderUpdated.setUser(order.getUser());
+		return orderUpdated;
+	}
+	
+	
+	public static Order getOrder() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		Connection conn = getConnection();
+		Order orderUpdated = new Order();
+		User user = new User();
+		orderUpdated.setUser(user);
+		String query = "SELECT * FROM `order`";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		ResultSet lista = buscar.executeQuery();
+		if(lista.last()){
+			orderUpdated.setName(lista.getString("name"));
+			orderUpdated.setDescription(lista.getString("description"));
+			orderUpdated.setNum(lista.getInt("num"));
+			orderUpdated.setStatus(lista.getString("status"));
+			orderUpdated.setId(lista.getInt("id"));
+			orderUpdated.getUser().setId(lista.getInt("user_id"));
+		}
+		orderUpdated.setUser(retriveUser(orderUpdated.getUser().getId()));
+		return orderUpdated;
+	}
+	
+	public static boolean updateOrderStatus(Order order) throws SQLException {
+		Connection conn = getConnection();
+		
+		String query = "UPDATE `order`  SET status=? WHERE id=?";
+		PreparedStatement update = conn.prepareStatement(query);
+		update.setString(1, resultado);
+		update.setInt(2, id);
+		update.execute();
+		
+		conn.close();
+		return true;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*public static ArrayList<Jogo> getBoloesAndamento(java.sql.Timestamp dataAtual) throws SQLException{
+		Connection conn = getConnection();
+		
+		String query = "SELECT jogo.id, mandante.id AS timeIdM, mandante.nome AS timeNomeM, visitante.id AS timeIdV, visitante.nome AS timeNomeV, jogo.local, jogo.inicio, jogo.fim, jogo.resultado, competicao.id, competicao.nome, competicao.tipo FROM jogo INNER JOIN time AS mandante ON mandante.id = jogo.timeIdM INNER JOIN time AS visitante ON visitante.id = jogo.timeIdV INNER JOIN competicao ON competicao.id = jogo.competicaoId WHERE jogo.inicio > ? ORDER BY jogo.inicio ASC";
+		PreparedStatement listar = conn.prepareStatement(query);
+		listar.setTimestamp(1, dataAtual);
+		ResultSet lista;
+		lista = listar.executeQuery();
+		
+		ArrayList<Jogo> listaJogo = new ArrayList<Jogo>();
+		while(lista.next()){
+			Jogo jogo = new Jogo();
+			Time timeM = new Time();
+			Time timeV = new Time();
+			Competicao competicao = new Competicao();
+			jogo.setId(lista.getInt(1));
+			timeM.setId(lista.getInt(2));
+			timeM.setNome(lista.getString(3));
+			timeV.setId(lista.getInt(4));
+			timeV.setNome(lista.getString(5));
+			jogo.setLocal(lista.getString(6));
+			jogo.setInicio(lista.getTimestamp(7));
+			jogo.setFim(lista.getTimestamp(8));
+			jogo.setResultado(lista.getString(9));
+			competicao.setId(lista.getInt(10));
+			competicao.setNome(lista.getString(11));
+			competicao.setTipo(lista.getString(12));
+			jogo.setTimeM(timeM);
+			jogo.setTimeV(timeV);
+			jogo.setCompeticao(competicao);
+			listaJogo.add(jogo);
+		}
+		
+		conn.close();
+		return listaJogo;
+	}
+	
+	public static ArrayList<Jogo> getBoloesEncerrados(java.sql.Timestamp dataAtual) throws SQLException{
+		Connection conn = getConnection();
+		
+		String query = "SELECT jogo.id, mandante.id AS timeIdM, mandante.nome AS timeNomeM, visitante.id AS timeIdV, visitante.nome AS timeNomeV, jogo.local, jogo.inicio, jogo.fim, jogo.resultado, competicao.id, competicao.nome, competicao.tipo FROM jogo INNER JOIN time AS mandante ON mandante.id = jogo.timeIdM INNER JOIN time AS visitante ON visitante.id = jogo.timeIdV INNER JOIN competicao ON competicao.id = jogo.competicaoId WHERE jogo.inicio < ? ORDER BY jogo.inicio DESC";
+		PreparedStatement listar = conn.prepareStatement(query);
+		listar.setTimestamp(1, dataAtual);
+		ResultSet lista;
+		lista = listar.executeQuery();
+		
+		ArrayList<Jogo> listaJogo = new ArrayList<Jogo>();
+		while(lista.next()){
+			Jogo jogo = new Jogo();
+			Time timeM = new Time();
+			Time timeV = new Time();
+			Competicao competicao = new Competicao();
+			jogo.setId(lista.getInt(1));
+			timeM.setId(lista.getInt(2));
+			timeM.setNome(lista.getString(3));
+			timeV.setId(lista.getInt(4));
+			timeV.setNome(lista.getString(5));
+			jogo.setLocal(lista.getString(6));
+			jogo.setInicio(lista.getTimestamp(7));
+			jogo.setFim(lista.getTimestamp(8));
+			jogo.setResultado(lista.getString(9));
+			competicao.setId(lista.getInt(10));
+			competicao.setNome(lista.getString(11));
+			competicao.setTipo(lista.getString(12));
+			jogo.setTimeM(timeM);
+			jogo.setTimeV(timeV);
+			jogo.setCompeticao(competicao);
+			listaJogo.add(jogo);
+		}
+		
+		conn.close();
+		return listaJogo;
+	}
+	
+	public static ArrayList<Aposta> getApostas(int id) throws SQLException{
+		Connection conn = getConnection();
+		
+		String query = "SELECT timeM.nome AS nomeM, timeV.nome AS nomeV, aposta.placar, competicao.nome, jogo.resultado, jogo.local, jogo.inicio, aposta.tipo FROM aposta INNER JOIN jogo ON jogo.id = aposta.jogoId INNER JOIN competicao ON competicao.id = jogo.competicaoId INNER JOIN time AS timeM ON timeM.id = jogo.timeIdM INNER JOIN time AS timeV ON timeV.id = jogo.timeIdV WHERE aposta.usuarioId = ?";
+		PreparedStatement listar = conn.prepareStatement(query);
+		listar.setInt(1, id);
+		ResultSet lista;
+		lista = listar.executeQuery();
+		
+		ArrayList<Aposta> listaAposta = new ArrayList<Aposta>();
+		while(lista.next()){
+			Aposta aposta = new Aposta();
+			Jogo jogo = new Jogo();
+			Time timeM = new Time();
+			Time timeV = new Time();
+			Competicao competicao = new Competicao();
+			timeM.setNome(lista.getString(1));
+			timeV.setNome(lista.getString(2));
+			aposta.setPlacar(lista.getString(3));
+			competicao.setNome(lista.getString(4));
+			jogo.setResultado(lista.getString(5));
+			jogo.setLocal(lista.getString(6));
+			jogo.setInicio(lista.getTimestamp(7));
+			aposta.setTipo(lista.getInt(8));
+			jogo.setTimeM(timeM);
+			jogo.setTimeV(timeV);
+			jogo.setCompeticao(competicao);
+			aposta.setJogo(jogo);
+			listaAposta.add(aposta);
+		}
+		
+		conn.close();
+		return listaAposta;
+	}
+	
+	public static ArrayList<Time> getSelecionarTime() throws SQLException{
+		Connection conn = getConnection();
+		
+		String query = "SELECT * FROM time";
+		PreparedStatement listar = conn.prepareStatement(query);
+		ResultSet lista;
+		lista = listar.executeQuery();
+		
+		ArrayList<Time> listaTime = new ArrayList<Time>();
+		while(lista.next()){
+			Time time = new Time();
+			time.setId(lista.getInt(1));
+			time.setNome(lista.getString(2));
+			listaTime.add(time);
+		}
+		
+		conn.close();
+		return listaTime;
+	}
+	
+	public static ArrayList<Competicao> getSelecionarCompeticao() throws SQLException{
+		Connection conn = getConnection();
+		
+		String query = "SELECT * FROM competicao";
+		PreparedStatement listar = conn.prepareStatement(query);
+		ResultSet lista;
+		lista = listar.executeQuery();
+		
+		ArrayList<Competicao> listaCompeticao = new ArrayList<Competicao>();
+		while(lista.next()){
+			Competicao competicao = new Competicao();
+			competicao.setId(lista.getInt(1));
+			competicao.setNome(lista.getString(2));
+			competicao.setTipo(lista.getString(3));
+			listaCompeticao.add(competicao);
+		}
+		
+		conn.close();
+		return listaCompeticao;
+	}
+	
+	public static boolean insertTime(String nome) throws SQLException {
+		Connection conn = getConnection();
+		
+		String query = "INSERT INTO time (nome) VALUES (?)";
+		PreparedStatement inserir = conn.prepareStatement(query);
+		inserir.setString(1, nome);
+		inserir.execute();  
+		
+		conn.close();
+		return true;
+	}
+	
+	public static boolean insertCompeticao(String nome, String tipo) throws SQLException {
+		Connection conn = getConnection();
+		
+		String query = "INSERT INTO competicao (nome, tipo) VALUES (?,?)";
+		PreparedStatement inserir = conn.prepareStatement(query);
+		inserir.setString(1, nome);
+		inserir.setString(2, tipo);
+		inserir.execute();  
+		
+		conn.close();
+		return true;
+	}
+	
+	public static boolean insertJogo(int timeIdM, int timeIdV, String local, java.sql.Timestamp inicio, java.sql.Timestamp fim, int competicaoId) throws SQLException{
+		Connection conn = getConnection();
+		
+		String query = "INSERT INTO jogo (timeIdM, timeIdV, local, inicio, fim, competicaoId) VALUES (?,?,?,?,?,?)";
+		PreparedStatement inserir = conn.prepareStatement(query);
+		inserir.setInt(1, timeIdM);
+		inserir.setInt(2, timeIdV);
+		inserir.setString(3, local);
+		inserir.setTimestamp(4, inicio);
+		inserir.setTimestamp(5, fim);
+		inserir.setInt(6, competicaoId);
+		inserir.execute();  
+		
+		conn.close();
+		return true;
+	}
+	
+	public static boolean updateResultado(int id, String resultado) throws SQLException {
+		Connection conn = getConnection();
+		
+		String query = "UPDATE jogo SET resultado=? WHERE id=?";
+		PreparedStatement alterar = conn.prepareStatement(query);
+		alterar.setString(1, resultado);
+		alterar.setInt(2, id);
+		alterar.execute();
+		
+		conn.close();
+		return true;
+	}
+	
+	public static boolean insertUsuario(String nome, String cpf, String email, String senha) throws SQLException {
+		Connection conn = getConnection();
+		
+		String query = "INSERT INTO usuario (nome, cpf, email, senha) VALUES (?,?,?,?)";
+		PreparedStatement inserir = conn.prepareStatement(query);
+		inserir.setString(1, nome);
+		inserir.setString(2, cpf);
+		inserir.setString(3, email);
+		inserir.setString(4, senha);
+		inserir.execute();  
+		
+		conn.close();
+		return true;
+	}
+	
+	public static boolean insertAposta(int jogoId, int usuarioId, String placar, int tipo) throws SQLException {
+		Connection conn = getConnection();
+		
+		String query = "INSERT INTO aposta (jogoId, usuarioId, placar, tipo) VALUES (?,?,?,?)";
+		PreparedStatement inserir = conn.prepareStatement(query);
+		inserir.setInt(1, jogoId);
+		inserir.setInt(2, usuarioId);
+		inserir.setString(3, placar);
+		inserir.setInt(4, tipo);
+		inserir.execute();  
+		
+		conn.close();
+		return true;
+	}
+	
+	public static ArrayList<Aposta> getVencedores (int id, String placar) throws SQLException{
+		Connection conn = getConnection();
+		
+		String query = "SELECT usuario.id, usuario.nome, usuario.cpf, usuario.email, aposta.tipo FROM usuario INNER JOIN aposta ON aposta.usuarioId = usuario.id WHERE aposta.jogoId = ? and aposta.placar = ?";
+		PreparedStatement listar = conn.prepareStatement(query);
+		listar.setInt(1, id);
+		listar.setString (2, placar);
+		ResultSet lista;
+		lista = listar.executeQuery();
+		
+		ArrayList<Aposta> listaAposta = new ArrayList<Aposta>();
+		while(lista.next()){
+			Aposta aposta = new Aposta();
+			Usuario usuario = new Usuario();
+			usuario.setId(lista.getInt(1));
+			usuario.setNome(lista.getString(2));
+			usuario.setCpf(lista.getString(3));
+			usuario.setEmail(lista.getString(4));
+			aposta.setTipo(lista.getInt(5));
+			aposta.setUsuario(usuario);
+			listaAposta.add(aposta);
+		}
+		
+		conn.close();
+		return listaAposta;
+	}
+	
+	public static int getApostasValendo (int id) throws SQLException{
+		Connection conn = getConnection();
+		
+		String query = "SELECT count(placar) FROM aposta WHERE jogoId = ? and tipo = 1";
+		PreparedStatement listar = conn.prepareStatement(query);
+		listar.setInt(1, id);
+		ResultSet lista;
+		lista = listar.executeQuery();
+		
+		int quantidade = 0;
+		while(lista.next()){
+			quantidade = lista.getInt(1);
+		}
+		
+		conn.close();
+		return quantidade;
+	}*/
+	
+}

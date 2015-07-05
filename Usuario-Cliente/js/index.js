@@ -42,10 +42,6 @@ function updateOrderStatusView(){
 	$("#order-status").html(loggedUser.order.status);
 }
 
-
-
-
-
 $(document).ready(function(){
 	$( "#logout-bt" ).click(function(){
 		location.reload();

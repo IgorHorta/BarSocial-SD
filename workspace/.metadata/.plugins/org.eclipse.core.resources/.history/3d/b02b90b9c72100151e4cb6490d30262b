@@ -1,0 +1,13 @@
+package order;
+
+import user.User;
+import br.com.caelum.vraptor.Resource;
+
+@Resource
+public class PedidoController {
+	
+	public void realizaPedido(User user, Pedido pedido){
+		
+	}
+	
+}

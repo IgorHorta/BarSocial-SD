@@ -1,0 +1,30 @@
+package user;
+
+
+public class User {
+	
+	private String name;
+	private String password;
+	private String accessLvl = 1;
+	
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getAccessLvl() {
+		return accessLvl;
+	}
+	public void setAccessLvl(String accessLvl) {
+		this.accessLvl = accessLvl;
+	}
+	
+}

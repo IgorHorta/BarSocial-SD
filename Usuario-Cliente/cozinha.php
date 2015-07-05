@@ -37,15 +37,14 @@
                <img src="img/logo.jpg" class="center-block" style="padding-top:20px;">
           </div>
         <div class="col-md-8">
-         <form action="#" class="form">
+         <form id="update-order-status" class="form">
              <div class="row" style="padding-bottom:50px;">
-             <button type="submit" class="btn btn-primary btn-lg center-block" id="recebe_pedido">Receber Pedido</button>
+             <button  class="btn btn-primary btn-lg center-block" id="recebe_pedido">Receber Pedido</button>
              </div>
                  <div class="row">
                  <div class="col-md-6">
-                 <h2>Pedido nº: 21</h2>
-                     <h3>Por Igor Lacerdino</h3>
-                    
+                 <h2 id="order_id">Pedido nº:</h2>
+                     <h3 id="user_name">Sem pedidos</h3>
                  </div>
                  <div class="col-md-6">
                      <h5>Descrição do pedido:</h5>
@@ -53,7 +52,7 @@
                      <p></p>
                      <span>Quantidade: </span><span id="quant_pedido"></span>
                      <p></p>
-                     <span>Observações:</span><span id="obs_pedido"></span>
+                     <span>Observações: </span><span id="obs_pedido"></span>
                  </div>
              
              
@@ -82,6 +81,7 @@
             <div class="form-group">
               <textarea id="msg_cliente" class="form-control" rows="3"></textarea>
             </div>
+			<input type="hidden" id="order-to-update-id" name="order.id"></input>
                  
              </div>
              <div class="row">

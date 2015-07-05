@@ -1,0 +1,147 @@
+package dao;
+import java.sql.*;
+
+import order.Order;
+import user.User;
+
+public class BarSocialDao {
+	
+	public static Connection getConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		Connection conn=null;
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		String url = "jdbc:mysql://localhost/barsocial?user=root&password=";
+		conn = DriverManager.getConnection(url);	
+		return conn;
+	}
+	
+	public static User retriveUser(int userId) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		Connection conn = getConnection();
+		User userToReturn = new User();
+		
+		String query = "SELECT * FROM user where iduser = ?";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		buscar.setInt (1, userId);
+		ResultSet lista = buscar.executeQuery();
+		if(lista.next()){
+			userToReturn.setName(lista.getString("name"));
+			userToReturn.setAccessLvl(lista.getInt("accessLvl"));
+			userToReturn.setId(lista.getInt("iduser"));
+		}
+		return userToReturn;
+	}
+	
+	public static Order retriveOrder(int id) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		Connection conn = getConnection();
+		Order orderToReturn = new Order();
+		User user = new User();
+		orderToReturn.setUser(user);
+		
+		String query = "SELECT * FROM `order` where id = ?";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		buscar.setInt (1, id);
+		ResultSet lista = buscar.executeQuery();
+		if(lista.next()){
+			orderToReturn.setName(lista.getString("name"));
+			orderToReturn.setDescription(lista.getString("description"));
+			orderToReturn.setNum(lista.getInt("num"));
+			orderToReturn.setStatus(lista.getString("status"));
+			orderToReturn.setId(lista.getInt("id"));
+			orderToReturn.getUser().setId(lista.getInt("user_id"));
+		}
+		return orderToReturn;
+	}
+	
+	
+	
+	public static User searchUser(User user) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Connection conn = getConnection();
+		
+		String query = "SELECT * FROM user where name = ?";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		buscar.setString (1, user.getName());
+		ResultSet lista = buscar.executeQuery();
+		
+		User userToReturn = new User();
+		if(lista.next()){
+			userToReturn.setName(lista.getString("name"));
+			userToReturn.setAccessLvl(lista.getInt("accessLvl"));
+			userToReturn.setId(lista.getInt("iduser"));
+		}else{
+			String qr = "INSERT INTO user (name, password, accessLvl) VALUES (?,?,?)";
+			PreparedStatement inserir = conn.prepareStatement(qr);
+			inserir.setString(1, user.getName());
+			inserir.setString(2, user.getPassword());
+			inserir.setInt(3, user.getAccessLvl());
+			inserir.execute();
+			userToReturn = user;
+		}
+		conn.close();
+		return userToReturn;
+	}
+	
+	public static Order makeAOrder(Order order) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Connection conn = getConnection();
+		String query = "INSERT INTO `order`(`name`, `description`, `num`, `user_id`) VALUES (?,?,?,?)";
+		PreparedStatement inserir = conn.prepareStatement(query);
+		inserir.setString(1, order.getName());
+		inserir.setString(2, order.getDescription());
+		inserir.setInt(3, order.getNum());
+		inserir.setInt(4, order.getUser().getId());
+		inserir.execute();
+		conn.close();
+		return order;
+	}
+	
+	public static Order checkMyOrder(Order order) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		Connection conn = getConnection();
+		Order orderUpdated = new Order();
+		String query = "SELECT * FROM `order` WHERE user_id = ?";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		buscar.setInt (1, order.getUser().getId());
+		ResultSet lista = buscar.executeQuery();
+		if(lista.last()){
+			orderUpdated.setName(lista.getString("name"));
+			orderUpdated.setDescription(lista.getString("description"));
+			orderUpdated.setNum(lista.getInt("num"));
+			orderUpdated.setStatus(lista.getString("status"));
+			orderUpdated.setId(lista.getInt("id"));
+		}
+		orderUpdated.setUser(order.getUser());
+		return orderUpdated;
+	}
+	
+	
+	public static Order getOrder() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
+		Connection conn = getConnection();
+		Order orderUpdated = new Order();
+		User user = new User();
+		orderUpdated.setUser(user);
+		String query = "SELECT * FROM `order` WHERE status!=?";
+		PreparedStatement buscar = conn.prepareStatement(query);
+		ResultSet lista = buscar.executeQuery();
+		if(lista.last()){
+			orderUpdated.setName(lista.getString("name"));
+			orderUpdated.setDescription(lista.getString("description"));
+			orderUpdated.setNum(lista.getInt("num"));
+			orderUpdated.setStatus(lista.getString("status"));
+			orderUpdated.setId(lista.getInt("id"));
+			orderUpdated.getUser().setId(lista.getInt("user_id"));
+		}
+		orderUpdated.setUser(retriveUser(orderUpdated.getUser().getId()));
+		return orderUpdated;
+	}
+	
+	public static Order updateOrderStatus(Order order) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Connection conn = getConnection();
+		
+		String query = "UPDATE `order`  SET status=? WHERE id=?";
+		PreparedStatement update = conn.prepareStatement(query);
+		update.setString(1, order.getStatus());
+		update.setInt(2, order.getId());
+		update.execute();
+		
+		conn.close();
+		return retriveOrder(order.getId());
+	}
+	
+}

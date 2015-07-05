@@ -1,0 +1,78 @@
+package user;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import dao.BarSocialDao;
+import order.Order;
+import order.Orders;
+import bean.JsonResponseBean;
+import br.com.caelum.vraptor.Get;
+import br.com.caelum.vraptor.Post;
+import br.com.caelum.vraptor.Resource;
+import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.view.Results;
+
+@Resource
+public class UserController {
+	
+	public UserController(Result result, Orders orders){
+		this.result = result;
+		this.orders = orders;
+	}
+	
+	public List<User> users = new ArrayList<>();
+	public final Orders orders;
+	
+	private final Result result; 
+	
+	@Post
+	public void signUp(User user) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		if(user == null || user.getName() == null || user.getPassword() == null){ 
+			this.result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(false, "Usuário Inválido")).serialize();
+			this.result.nothing();
+		}else{
+			BarSocialDao.searchUser(user);
+			result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(user)).recursive().serialize();
+			
+		}	
+	}
+	
+	@Post
+	public void makeOrder(Order order){
+		if(order == null || order.getName() == null){ 
+			this.result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(false, "Pedido Inválido")).serialize();
+			this.result.nothing();
+		}else{
+			orders.addOrder(order);
+			System.out.println("--->"+orders.getSize());
+			result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(order)).recursive().serialize();
+		}
+	}
+	
+	@Post
+	public void checkOrderStatus(User user){
+		if(user == null || user.getName() == null){
+			this.result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(false, "Usuario Inválido")).serialize();
+			this.result.nothing();
+		}else{
+			if(orders.getSize() < 1){
+				this.result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(false, "Sem pedidos na fila")).serialize();
+				this.result.nothing();
+			}else{
+				for(Order orderInList : orders.getOrderList()){
+					if(user.getName().equals(orderInList.getUser().getName())){
+						result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(user)).recursive().serialize();
+						this.result.nothing();
+						return;
+					}
+				}
+				this.result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(false, "Você não realizou pedidos ainda")).serialize();
+				this.result.nothing();
+			}
+		}
+	}
+	
+	
+}

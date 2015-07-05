@@ -1,0 +1,34 @@
+package user;
+
+import java.util.List;
+
+import pedido.Pedido;
+import br.com.caelum.vraptor.Post;
+import br.com.caelum.vraptor.Resource;
+import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.view.Results;
+
+@Resource
+public class UserController {
+	
+	public UserController(Result result){
+		this.result = result;
+	}
+	
+	public List<User> users;
+	public List<Pedido> pedidos;
+	
+	private final Result result; 
+	
+	@Post
+	public void signUp(User user){
+		if(user == null || user.getName().length() == 0){ 
+			this.result.use(Results.json()).withoutRoot().from(new JsonResponseBean<Object>(false, message)).serialize();
+			this.result.nothing();
+		}else{
+			result.use(Results.json()).from(user).serialize();
+		}
+		
+	}
+	
+}
