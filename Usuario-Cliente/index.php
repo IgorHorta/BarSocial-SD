@@ -135,7 +135,7 @@
            <div class="jumbotron">
         <h1 id="order-status">Cozinhando</h1>
         <p class="lead">Estamos preparando tudo para ficar perfeito para você</p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button" id="sair">Sair</a></p>
+        <p><a id = "logout-bt"class="btn btn-lg btn-success"  role="button" id="sair">Sair</a></p>
       </div>
            
             

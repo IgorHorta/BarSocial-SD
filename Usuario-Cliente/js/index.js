@@ -47,6 +47,10 @@ function updateOrderStatusView(){
 
 
 $(document).ready(function(){
+	$( "#logout-bt" ).click(function(){
+		location.reload();
+	});
+	
 	$( "#cadastrousuario" ).submit(function( event ) {
 		var array = $( this ).serializeArray();
 		var json = {};
