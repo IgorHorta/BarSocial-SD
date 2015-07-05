@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Flat UI Free</title>
+    <title>Bar Social</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Loading Bootstrap -->
@@ -11,7 +11,7 @@
     <!-- Loading Flat UI -->
     <link href="css/flat-ui.css" rel="stylesheet">
 
-    <link rel="shortcut icon" href="img/favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
@@ -48,9 +48,11 @@
                  </div>
                  <div class="col-md-6">
                      <h5>Descrição do pedido:</h5>
-                     <p>Nome do pedido</p>
-                     <p>Quantidade: 3</p>
-                     <p>Observações:</p>
+                     <span>Nome do pedido: </span><span id="nome_pedido"></span>
+                     <p></p>
+                     <span>Quantidade: </span><span id="quant_pedido"></span>
+                     <p></p>
+                     <span>Observações:</span><span id="obs_pedido"></span>
                  </div>
              
              
@@ -61,12 +63,12 @@
             <div class="form-group form-group-hg">
             <label class="col-sm-4 control-label" for="formGroupInputHuge">Status do Pedido:</label>
                 <div class="col-sm-8">
-              <select data-toggle="select" class="form-control select select-info">
-                <option>Recebido</option>
-                <option>Preparando ingredientes</option>
-                <option>Cozinhando</option>
-                <option>Quase pronto</option>
-                <option>Seu pedido está pronto!</option>
+              <select data-toggle="select" name="order.status" class="form-control select select-info">
+                <option value="Recebido">Recebido</option>
+                <option value="Preparando ingredientes">Preparando ingredientes</option>
+                <option value="Cozinhando">Cozinhando</option>
+                <option value="Quase pronto">Quase pronto</option>
+                <option value="Seu pedido está pronto!">Seu pedido está pronto!</option>
                 </select>
                 </div>
             </div>
@@ -77,7 +79,7 @@
              <h4>Mensagem para o cliente (opcional)</h4>
           
             <div class="form-group">
-              <textarea class="form-control" rows="3"></textarea>
+              <textarea id="msg_cliente" class="form-control" rows="3"></textarea>
             </div>
                  
              </div>
